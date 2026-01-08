@@ -30,7 +30,7 @@ const Sidebar = () => {
         const token = session?.access_token;
 
         const response = await fetch(
-          `http://localhost:5000/api/boards?user_id=${user.id}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/boards?user_id=${user.id}`,
           {
             method: "GET",
             headers: {
@@ -72,7 +72,7 @@ const Sidebar = () => {
         const token = session?.access_token;
 
         const response = await fetch(
-          `http://localhost:5000/api/boards/${boardId}`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/boards/${boardId}`,
           {
             method: "DELETE",
             headers: {

@@ -26,7 +26,7 @@ const Board = () => {
           const token = session?.access_token;
 
           const response = await fetch(
-            `http://localhost:5000/api/boards/${boardId}`,
+            `${import.meta.env.VITE_BACKEND_URL}/api/boards/${boardId}`,
             {
               method: "GET",
               headers: {
