@@ -17,8 +17,7 @@ class ListModel {
         const { data, error } = await supabase
             .from('lists')
             .select('*')
-            .eq('board_id', boardId)
-            .order('position', { ascending: true });
+            .eq('board_id', boardId);
 
         if (error) {
             throw error;

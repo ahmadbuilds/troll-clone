@@ -1,7 +1,7 @@
 import ListModel from '../models/listModel.js';
 
 class ListService {
-    async createList(boardId, title, position) {
+    async createList(boardId, title) {
         if (!boardId) {
             throw new Error('Board ID is required');
         }
@@ -12,7 +12,6 @@ class ListService {
         const listData = {
             board_id: boardId,
             title: title,
-            position: position || 65535,
         };
 
         const newList = await ListModel.createList(listData);

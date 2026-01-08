@@ -1,7 +1,7 @@
 import CardModel from '../models/cardModel.js';
 
 class CardService {
-    async createCard(listId, title, description, priority, position) {
+    async createCard(listId, title, description, priority) {
         if (!listId) {
             throw new Error('List ID is required');
         }
@@ -20,7 +20,6 @@ class CardService {
             title: title,
             description: description || null,
             priority: priority || null,
-            position: position || 65535,
         };
 
         const newCard = await CardModel.createCard(cardData);

@@ -4,8 +4,8 @@ import CardModel from '../models/cardModel.js';
 class ListController {
     async createList(req, res) {
         try {
-            const { board_id, title, position } = req.body;
-            const newList = await listService.createList(board_id, title, position);
+            const { board_id, title } = req.body;
+            const newList = await listService.createList(board_id, title);
             res.status(201).json({"message":"List created successfully"});
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -20,7 +20,6 @@ class ListController {
 
             const listsWithCards = lists.map(list => {
                 const listCards = cards.filter(card => card.list_id === list.id);
-                listCards.sort((a, b) => a.position - b.position);
                 const listObj = { ...list, cards: listCards };
                 return listObj;
             });

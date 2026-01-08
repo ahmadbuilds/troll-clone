@@ -17,8 +17,7 @@ class CardModel {
         const { data, error } = await supabase
             .from('cards')
             .select('*')
-            .eq('list_id', listId)
-            .order('position', { ascending: true });
+            .eq('list_id', listId);
 
         if (error) {
             throw error;

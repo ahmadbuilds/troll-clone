@@ -3,8 +3,8 @@ import cardService from '../services/cardService.js';
 class CardController {
     async createCard(req, res) {
         try {
-            const { list_id, title, description, priority, position } = req.body;
-            const newCard = await cardService.createCard(list_id, title, description, priority, position);
+            const { list_id, title, description, priority } = req.body;
+            const newCard = await cardService.createCard(list_id, title, description, priority);
             res.status(201).json({"message":"Card created successfully", card: newCard});
         } catch (error) {
             res.status(400).json({ error: error.message });
