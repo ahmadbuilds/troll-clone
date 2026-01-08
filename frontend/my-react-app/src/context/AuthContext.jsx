@@ -62,24 +62,8 @@ export const AuthProvider = ({ children }) => {
 
     if (error) throw error;
 
-    if (data.user) {
-      // Insert into users table
-      const { error: insertError } = await supabase.from("users").insert([
-        {
-          id: data.user.id, // Assuming 'id' in users table links to auth.users.id
-          username,
-          email,
-          role,
-        },
-      ]);
-
-      if (insertError) {
-        // Optional: rollback signup or just log error?
-        // For now, throwing error so UI can show it.
-        console.error("Error inserting user details:", insertError);
-        throw new Error("Signup successful but failed to save user details.");
-      }
-    }
+    // DB Trigger handles user creation in 'users' table
+    // Ensure the trigger is updated to pull metadata (username, role)
 
     return data;
   };
