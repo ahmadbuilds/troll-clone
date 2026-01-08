@@ -5,7 +5,7 @@ class BoardController {
         try {
             const { title, bg_color, img_url, user_id } = req.body;
             const newBoard = await boardService.createBoard(title, bg_color, img_url, user_id);
-            res.status(201).json({"message":"Board created successfully"});
+            res.status(201).json(newBoard);
         } catch (error) {
             res.status(400).json({ error: error.message });
         }
