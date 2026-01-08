@@ -5,6 +5,7 @@ import boardRoutes from './routes/boardRoutes.js';
 import listRoutes from './routes/listRoutes.js';
 import cardRoutes from './routes/cardRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import { extractAuthToken } from './middleware/auth.js';
 
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use(extractAuthToken);
 
+app.use('/api/auth', authRoutes);
 app.use('/api/boards', boardRoutes);
 app.use('/api/lists', listRoutes);
 app.use('/api/cards', cardRoutes);
