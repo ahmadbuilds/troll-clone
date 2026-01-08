@@ -1,7 +1,7 @@
 import ListModel from '../models/listModel.js';
 
 class ListService {
-    async createList(boardId, title) {
+    async createList(boardId, title, authToken) {
         if (!boardId) {
             throw new Error('Board ID is required');
         }
@@ -14,31 +14,31 @@ class ListService {
             title: title,
         };
 
-        const newList = await ListModel.createList(listData);
+        const newList = await ListModel.createList(listData, authToken);
         return newList;
     }
 
-    async getLists(boardId) {
+    async getLists(boardId, authToken) {
         if (!boardId) {
             throw new Error('Board ID is required');
         }
-        const lists = await ListModel.getListsByBoard(boardId);
+        const lists = await ListModel.getListsByBoard(boardId, authToken);
         return lists;
     }
 
-    async updateList(listId, title) {
+    async updateList(listId, title, authToken) {
         if (!listId) {
             throw new Error('List ID is required');
         }
-        const updatedList = await ListModel.updateList(listId, { title });
+        const updatedList = await ListModel.updateList(listId, { title }, authToken);
         return updatedList;
     }
 
-    async deleteList(listId) {
+    async deleteList(listId, authToken) {
         if (!listId) {
             throw new Error('List ID is required');
         }
-        await ListModel.deleteList(listId);
+        await ListModel.deleteList(listId, authToken);
         return { message: 'List deleted successfully' };
     }
 }

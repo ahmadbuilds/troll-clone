@@ -1,15 +1,15 @@
 import CommentModel from '../models/commentModel.js';
 
 class CommentService {
-    async getCommentsByCard(cardId) {
+    async getCommentsByCard(cardId, authToken) {
         if (!cardId) {
             throw new Error('Card ID is required');
         }
-        const comments = await CommentModel.getCommentsByCard(cardId);
+        const comments = await CommentModel.getCommentsByCard(cardId, authToken);
         return comments;
     }
 
-    async createComment(cardId, content) {
+    async createComment(cardId, content, authToken) {
         if (!cardId) {
             throw new Error('Card ID is required');
         }
@@ -22,11 +22,11 @@ class CommentService {
             content: content.trim()
         };
 
-        const newComment = await CommentModel.createComment(commentData);
+        const newComment = await CommentModel.createComment(commentData, authToken);
         return newComment;
     }
 
-    async updateComment(commentId, content) {
+    async updateComment(commentId, content, authToken) {
         if (!commentId) {
             throw new Error('Comment ID is required');
         }
@@ -34,15 +34,15 @@ class CommentService {
             throw new Error('Content is required');
         }
 
-        const updatedComment = await CommentModel.updateComment(commentId, { content: content.trim() });
+        const updatedComment = await CommentModel.updateComment(commentId, { content: content.trim() }, authToken);
         return updatedComment;
     }
 
-    async deleteComment(commentId) {
+    async deleteComment(commentId, authToken) {
         if (!commentId) {
             throw new Error('Comment ID is required');
         }
-        await CommentModel.deleteComment(commentId);
+        await CommentModel.deleteComment(commentId, authToken);
         return { message: 'Comment deleted successfully' };
     }
 }

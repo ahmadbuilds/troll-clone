@@ -8,4 +8,17 @@ const supabaseKey = process.env.SUPABASE_API;
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+export const getSupabaseClient = (authToken) => {
+    if (authToken) {
+        return createClient(supabaseUrl, supabaseKey, {
+            global: {
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                }
+            }
+        });
+    }
+    return supabase;
+};
+
 export default supabase;

@@ -4,7 +4,7 @@ class CardController {
     async createCard(req, res) {
         try {
             const { list_id, title, description, priority } = req.body;
-            const newCard = await cardService.createCard(list_id, title, description, priority);
+            const newCard = await cardService.createCard(list_id, title, description, priority, req.authToken);
             res.status(201).json({"message":"Card created successfully", card: newCard});
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -15,7 +15,7 @@ class CardController {
         try {
             const { id } = req.params;
             const data = req.body;
-            const updatedCard = await cardService.updateCard(id, data);
+            const updatedCard = await cardService.updateCard(id, data, req.authToken);
             res.status(200).json({"message":"Card update successfully"});
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -25,7 +25,7 @@ class CardController {
     async deleteCard(req, res) {
         try {
             const { id } = req.params;
-            const result = await cardService.deleteCard(id);
+            const result = await cardService.deleteCard(id, req.authToken);
             res.status(200).json({"message":"Card deleted successfully"});
         } catch (error) {
             res.status(500).json({ error: error.message });

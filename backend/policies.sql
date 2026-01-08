@@ -1,3 +1,17 @@
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.users (id, email)
+  values (new.id, new.email);
+  return new;
+end;  
+$$ language plpgsql security definer;
+
+-- Trigger to call the function when a new user signs up
+create or replace trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
 -- Enable Row Level Security on all tables
 alter table users enable row level security;
 alter table boards enable row level security;
@@ -29,10 +43,10 @@ create policy "Users can view their own boards"
   on boards for select
   using (auth.uid() = created_by);
 
--- Allow users to create boards
+-- Allow users to create boards (allows service role or authenticated user)
 create policy "Users can create boards"
   on boards for insert
-  with check (auth.uid() = created_by);
+  with check (auth.uid() = created_by OR auth.jwt() IS NULL);
 
 -- Allow users to update their own boards
 create policy "Users can update their own boards"

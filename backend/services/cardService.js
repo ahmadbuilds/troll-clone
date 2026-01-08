@@ -1,7 +1,7 @@
 import CardModel from '../models/cardModel.js';
 
 class CardService {
-    async createCard(listId, title, description, priority) {
+    async createCard(listId, title, description, priority, authToken) {
         if (!listId) {
             throw new Error('List ID is required');
         }
@@ -22,23 +22,23 @@ class CardService {
             priority: priority || null,
         };
 
-        const newCard = await CardModel.createCard(cardData);
+        const newCard = await CardModel.createCard(cardData, authToken);
         return newCard;
     }
 
-    async updateCard(cardId, data) {
+    async updateCard(cardId, data, authToken) {
         if (!cardId) {
             throw new Error('Card ID is required');
         }
-        const updatedCard = await CardModel.updateCard(cardId, data);
+        const updatedCard = await CardModel.updateCard(cardId, data, authToken);
         return updatedCard;
     }
 
-    async deleteCard(cardId) {
+    async deleteCard(cardId, authToken) {
         if (!cardId) {
             throw new Error('Card ID is required');
         }
-        await CardModel.deleteCard(cardId);
+        await CardModel.deleteCard(cardId, authToken);
         return { message: 'Card deleted successfully' };
     }
 }
