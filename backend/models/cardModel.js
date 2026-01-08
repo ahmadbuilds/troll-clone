@@ -1,8 +1,9 @@
-import supabase from '../config/supabaseClient.js';
+import supabase, { getSupabaseClient } from '../config/supabaseClient.js';
 
 class CardModel {
-    static async createCard(cardData) {
-        const { data, error } = await supabase
+    static async createCard(cardData, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('cards')
             .insert([cardData])
             .select();
@@ -13,8 +14,9 @@ class CardModel {
         return data[0];
     }
 
-    static async getCardsByList(listId) {
-        const { data, error } = await supabase
+    static async getCardsByList(listId, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('cards')
             .select('*')
             .eq('list_id', listId);
@@ -25,8 +27,9 @@ class CardModel {
         return data;
     }
 
-    static async getCardsByBoard(boardId) {
-        const { data, error } = await supabase
+    static async getCardsByBoard(boardId, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('cards')
             .select('*, lists!inner(board_id)')
             .eq('lists.board_id', boardId);
@@ -37,8 +40,9 @@ class CardModel {
         return data;
     }
 
-    static async updateCard(cardId, updateData) {
-        const { data, error } = await supabase
+    static async updateCard(cardId, updateData, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('cards')
             .update(updateData)
             .eq('id', cardId)
@@ -50,8 +54,9 @@ class CardModel {
         return data[0];
     }
 
-    static async deleteCard(cardId) {
-        const { data, error } = await supabase
+    static async deleteCard(cardId, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('cards')
             .delete()
             .eq('id', cardId)

@@ -1,8 +1,9 @@
-import supabase from '../config/supabaseClient.js';
+import supabase, { getSupabaseClient } from '../config/supabaseClient.js';
 
 class CommentModel {
-    static async getCommentsByCard(cardId) {
-        const { data, error } = await supabase
+    static async getCommentsByCard(cardId, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('comments')
             .select('*')
             .eq('card_id', cardId)
@@ -14,8 +15,9 @@ class CommentModel {
         return data;
     }
 
-    static async createComment(commentData) {
-        const { data, error } = await supabase
+    static async createComment(commentData, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('comments')
             .insert([commentData])
             .select();
@@ -26,8 +28,9 @@ class CommentModel {
         return data[0];
     }
 
-    static async updateComment(commentId, updateData) {
-        const { data, error } = await supabase
+    static async updateComment(commentId, updateData, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('comments')
             .update(updateData)
             .eq('id', commentId)
@@ -39,8 +42,9 @@ class CommentModel {
         return data[0];
     }
 
-    static async deleteComment(commentId) {
-        const { data, error } = await supabase
+    static async deleteComment(commentId, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('comments')
             .delete()
             .eq('id', commentId)

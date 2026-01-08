@@ -1,8 +1,9 @@
-import supabase from '../config/supabaseClient.js';
+import supabase, { getSupabaseClient } from '../config/supabaseClient.js';
 
 class BoardModel {
-    static async createBoard(boardData) {
-        const { data, error } = await supabase
+    static async createBoard(boardData, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('boards')
             .insert([boardData])
             .select();
@@ -13,8 +14,9 @@ class BoardModel {
         return data[0];
     }
 
-    static async getBoardsByUser(userId) {
-        const { data, error } = await supabase
+    static async getBoardsByUser(userId, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('boards')
             .select('*')
             .eq('created_by', userId);
@@ -25,8 +27,9 @@ class BoardModel {
         return data;
     }
 
-    static async deleteBoard(boardId) {
-        const { data, error } = await supabase
+    static async deleteBoard(boardId, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('boards')
             .delete()
             .eq('board_id', boardId)
@@ -38,8 +41,9 @@ class BoardModel {
         return data;
     }
 
-    static async getBoardById(boardId) {
-        const { data, error } = await supabase
+    static async getBoardById(boardId, authToken = null) {
+        const client = getSupabaseClient(authToken);
+        const { data, error } = await client
             .from('boards')
             .select('*')
             .eq('board_id', boardId)

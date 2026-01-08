@@ -5,7 +5,7 @@ class ListController {
     async createList(req, res) {
         try {
             const { board_id, title } = req.body;
-            const newList = await listService.createList(board_id, title);
+            const newList = await listService.createList(board_id, title, req.authToken);
             res.status(201).json({"message":"List created successfully"});
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -15,8 +15,8 @@ class ListController {
     async getLists(req, res) {
         try {
             const { boardId } = req.params;
-            const lists = await listService.getLists(boardId);
-            const cards = await CardModel.getCardsByBoard(boardId);
+            const lists = await listService.getLists(boardId, req.authToken);
+            const cards = await CardModel.getCardsByBoard(boardId, req.authToken);
 
             const listsWithCards = lists.map(list => {
                 const listCards = cards.filter(card => card.list_id === list.id);
@@ -34,7 +34,7 @@ class ListController {
         try {
             const { id } = req.params;
             const { title } = req.body;
-            const updatedList = await listService.updateList(id, title);
+            const updatedList = await listService.updateList(id, title, req.authToken);
             res.status(200).json({"message":"List update successfully"});
         } catch (error) {
             res.status(400).json({ error: error.message });
@@ -44,7 +44,7 @@ class ListController {
     async deleteList(req, res) {
         try {
             const { id } = req.params;
-            const result = await listService.deleteList(id);
+            const result = await listService.deleteList(id, req.authToken);
             res.status(200).json({"message":"List delete successfully"});
         } catch (error) {
             res.status(500).json({ error: error.message });
