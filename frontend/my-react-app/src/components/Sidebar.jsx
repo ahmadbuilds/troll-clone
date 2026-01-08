@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { supabase } from "../supabaseClient";
 
 const Sidebar = () => {
   const { user, isGuest, logout } = useAuth();
@@ -23,12 +24,18 @@ const Sidebar = () => {
       setBoards(stored);
     } else if (user) {
       try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const token = session?.access_token;
+
         const response = await fetch(
           `http://localhost:5000/api/boards?user_id=${user.id}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -59,10 +66,18 @@ const Sidebar = () => {
       }
     } else {
       try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const token = session?.access_token;
+
         const response = await fetch(
           `http://localhost:5000/api/boards/${boardId}`,
           {
             method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         if (response.ok) {

@@ -1,7 +1,10 @@
 import express from 'express';
 import boardController from '../controllers/boardController.js';
+import { extractAuthToken } from '../middleware/auth.js';
 
 const router = express.Router();
+
+router.use(extractAuthToken);
 
 router.post('/with-color', (req, res) => boardController.createBoardWithColor(req, res));
 router.post('/with-image', (req, res) => boardController.createBoardWithImage(req, res));

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { supabase } from "../supabaseClient";
 import { useAuth } from "../context/AuthContext";
+import { supabase } from "../supabaseClient";
 
 const Board = () => {
   const { boardId } = useParams();
-  const { isGuest } = useAuth();
+  const { isGuest, user } = useAuth();
   const [board, setBoard] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -15,38 +15,61 @@ const Board = () => {
         const storedBoards = JSON.parse(
           localStorage.getItem("guest_boards") || "[]"
         );
-        // In local storage we might use IDs or just index? Assuming we generate IDs.
         const found = storedBoards.find((b) => b.id === boardId);
         setBoard(found);
         setLoading(false);
-      } else {
-        const { data, error } = await supabase
-          .from("board")
-          .select("*")
-          .eq("id", boardId)
-          .single();
+      } else if (user) {
+        try {
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
+          const token = session?.access_token;
 
-        if (error) {
+          const response = await fetch(
+            `http://localhost:5000/api/boards/${boardId}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            setBoard(data);
+          } else {
+            console.error("Failed to fetch board:", response.statusText);
+            setBoard(null);
+          }
+        } catch (error) {
           console.error("Error fetching board:", error);
-        } else {
-          setBoard(data);
+          setBoard(null);
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
       }
     };
 
     fetchBoard();
-  }, [boardId, isGuest]);
+  }, [boardId, isGuest, user]);
 
   if (loading) return <div>Loading board...</div>;
-  if (!board) return <div>Board not found.</div>;
+  if (!board)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-xl text-gray-600">
+          Board not found or you don't have access.
+        </div>
+      </div>
+    );
 
   return (
     <div
       className="h-screen w-full p-8"
       style={{
         backgroundColor: board.bg_color || "#ffffff",
-        backgroundImage: board.image_url ? `url(${board.image_url})` : "none",
+        backgroundImage: board.img_url ? `url(${board.img_url})` : "none",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

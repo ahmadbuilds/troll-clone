@@ -79,10 +79,16 @@ const Dashboard = () => {
           user_id: user.id,
         };
 
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const token = session?.access_token;
+
         const response = await fetch("http://localhost:5000/api/boards", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
         });
